@@ -358,4 +358,36 @@ body {
   width: 100vw;
 }
 
+.table {
+  margin-top: 30px;
+  text-align: center;
+  border-spacing: 0;
+  width: 100%;
+}
+.table__head-tr {
+  height: 50px;
+}
+.table__head-th {
+  border: 1px solid #fff;
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 700;
+  padding: 0 10px;
+}
+.table__body-tr {
+  height: 50px;
+}
+.table__body-tr:hover {
+  color: #fff;
+  transform: scale(1.02);
+  cursor: pointer;
+}
+.table__body-tr--edited {
+  animation: blink 1s;
+}
+.table__body-td {
+  border: 1px solid #fff;
+  padding: 0 10px;
+}
+
 /*# sourceMappingURL=main.css.map */

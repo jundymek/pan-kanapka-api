@@ -19,45 +19,49 @@
             integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
             crossorigin=""
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
     <title>Pan kanapka</title>
 
 </head>
 <body>
 <div id="mapid"></div>
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endif %}
 <form method="post" action="{% url 'add' %}">{% csrf_token %}
-    <input id="autocomplete_search" name="address" type="text" class="form-control" placeholder="Search"/>
-    <input type="text" name="name"/>
+    <input id="autocomplete_search" name="address" type="text" class="form-control" placeholder="Search" required/>
+    <input id="name" type="text" name="name" required/>
     <input id="latit" type="hidden" name="latitude" value=""/>
     <input id="longit" type="hidden" name="longitude" value=""/>
     <button class="addressButton" type="submit">Zmień</button>
 </form>
-<table>
-    <thead>
-    <tr>
-        <th>name</th>
-        <th>address</th>
+<table class="table">
+    <thead class="table__head">
+    <tr class="table__head-tr">
+        <th class="table__head-th">name</th>
+        <th class="table__head-th">address</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody class="table__body">
     {% for place in places %}
-        <tr>
-            <td>{{ place.name }}</td>
-            <td>{{ place.address }}</td>
+        <tr class="table__body-tr">
+            <td class="table__body-td">{{ place.name }}</td>
+            <td class="table__body-td">{{ place.address }}</td>
+            <td class="table__body-td"><a href="{% url 'delete' place.id %}">Delete</a></td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
-
+<div id="serverResponse"></div>
 
 <script>
     let places = {{places|safe}};
-
 </script>
 
-{#<form method="post">{% csrf_token %}#}
-{#    {{ form.as_p }}#}
-{#    <input type="submit" value="Save">#}
-{#</form>#}
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgNgxfwxU2uxt5pfqnRlaS5n73LnPRL14&libraries=places"></script>
 <script src="{% static  'js/main.js' %}"></script>
 </body>

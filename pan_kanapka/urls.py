@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path
 
 from kanapka import views
-from kanapka.views import IndexView
+from kanapka.views import IndexView, PlaceDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
-    path('add', views.add_new_place, name='add')
+    path('add/', views.add_new_place, name='add'),
+    path('delete/<int:pk>/', PlaceDeleteView.as_view(), name='delete'),
 ]
