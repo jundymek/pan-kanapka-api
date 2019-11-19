@@ -8,9 +8,57 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% sass_src 'css/main.scss' %}">
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+            crossorigin=""
+    />
+    <script
+            src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""
+    ></script>
     <title>Pan kanapka</title>
+
 </head>
 <body>
-lklkkl
+<div id="mapid"></div>
+<form method="post" action="{% url 'add' %}">{% csrf_token %}
+    <input id="autocomplete_search" name="address" type="text" class="form-control" placeholder="Search"/>
+    <input type="text" name="name"/>
+    <input id="latit" type="hidden" name="latitude" value=""/>
+    <input id="longit" type="hidden" name="longitude" value=""/>
+    <button class="addressButton" type="submit">Zmień</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>name</th>
+        <th>address</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for place in places %}
+        <tr>
+            <td>{{ place.name }}</td>
+            <td>{{ place.address }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<script>
+    let places = {{places|safe}};
+
+</script>
+
+{#<form method="post">{% csrf_token %}#}
+{#    {{ form.as_p }}#}
+{#    <input type="submit" value="Save">#}
+{#</form>#}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgNgxfwxU2uxt5pfqnRlaS5n73LnPRL14&libraries=places"></script>
+<script src="{% static  'js/main.js' %}"></script>
 </body>
 </html>
