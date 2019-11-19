@@ -5,7 +5,6 @@ const lat = document.querySelector("#latit");
 const lon = document.querySelector("#longit");
 
 
-
 google.maps.event.addDomListener(window, "load");
 button.addEventListener("submit", () => firstInput);
 const searchBox = new google.maps.places.SearchBox(input);
@@ -27,8 +26,15 @@ function addMarkers() {
         console.log(places[i]);
         console.log(places[i].latitude, places[i].longitude)
         const marker = L.marker([places[i].latitude, places[i].longitude]).addTo(mymap);
-        marker.bindPopup(`<b>${places[i].name}</b><br>${places[i].address}`);
+        marker.bindPopup(`
+        <b>${places[i].name}</b><br>${places[i].address}<br>
+        <button onclick="subscribe(${places[i].id})">Subscribe</button>
+        `);
     }
+}
+
+function subscribe(id) {
+    console.log('SUBSCRIBED ', id)
 }
 
 function firstInput() {
