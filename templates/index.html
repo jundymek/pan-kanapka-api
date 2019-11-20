@@ -52,6 +52,7 @@
             <td class="table__body-td">{{ place.name }}</td>
             <td class="table__body-td">{{ place.address }}</td>
             <td class="table__body-td"><a href="{% url 'delete' place.id %}">Delete</a></td>
+            <td class="table__body-td"><a href="{% url 'subscribe' place.id %}">Subscribe</a></td>
         </tr>
     {% endfor %}
     </tbody>
@@ -67,6 +68,7 @@
 
 <script>
     let places = {{places|safe}};
+    let user = {{ user.id|safe }};
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgNgxfwxU2uxt5pfqnRlaS5n73LnPRL14&libraries=places"></script>

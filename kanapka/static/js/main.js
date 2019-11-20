@@ -2,7 +2,8 @@ const button = document.querySelector(".addressButton");
 const input = document.getElementById("autocomplete_search");
 const lat = document.querySelector("#latit");
 const lon = document.querySelector("#longit");
-
+const userId = user ? user : null;
+console.log(userId);
 
 google.maps.event.addDomListener(window, "load");
 button.addEventListener("submit", () => firstInput);
@@ -35,6 +36,7 @@ function addMarkers() {
 function subscribe(id) {
     console.log('SUBSCRIBED ', id)
 }
+
 
 function firstInput() {
     console.log('ddddddddddddddd')

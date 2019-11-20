@@ -18,6 +18,3 @@ class MyUser(AbstractUser):
     def __str__(self):
         return self.username
 
-# class Client(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     places = models.ManyToManyField(Place)

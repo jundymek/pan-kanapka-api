@@ -24,6 +24,7 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('add/', views.add_new_place, name='add'),
     path('delete/<int:pk>/', PlaceDeleteView.as_view(), name='delete'),
+    path('subscribe/<int:placeId>/', views.subscribe, name='subscribe'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup', SignUpView.as_view(), name="signup")
 ]

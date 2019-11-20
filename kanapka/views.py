@@ -1,13 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView
 
 from kanapka.forms import CustomUserCreationForm
-from kanapka.models import Place
+from kanapka.models import Place, MyUser
 
 
 class SignUpView(CreateView):
@@ -17,28 +15,17 @@ class SignUpView(CreateView):
 
     def form_valid(self, form):
         valid = super(SignUpView, self).form_valid(form)
-        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password1')
         new_user = form.save()
         print(new_user)
         login(self.request, new_user)
         return valid
 
 
-def signup_view(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            print(user)
-            login(request, user)
-            return HttpResponseRedirect('/')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
-
+def subscribe(request, placeId):
+    print(placeId)
+    user = MyUser.objects.get(id=request.user.id)
+    user.places.add(Place.objects.get(id=placeId))
+    return HttpResponseRedirect('/')
 
 def add_new_place(request):
     try:
