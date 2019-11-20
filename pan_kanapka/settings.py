@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+
 from .settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -129,3 +130,8 @@ STATICFILES_FINDERS = [
 ]
 
 SESSION_COOKIE_SECURE = False
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+AUTH_USER_MODEL = 'kanapka.MyUser'

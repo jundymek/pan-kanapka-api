@@ -1,6 +1,5 @@
 const button = document.querySelector(".addressButton");
 const input = document.getElementById("autocomplete_search");
-const nameField = document.querySelector("#name");
 const lat = document.querySelector("#latit");
 const lon = document.querySelector("#longit");
 

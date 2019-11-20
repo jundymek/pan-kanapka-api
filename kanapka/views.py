@@ -1,10 +1,43 @@
 from django.contrib import messages
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
-# Create your views here.
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DeleteView
+from django.views.generic import ListView, DeleteView, CreateView
 
+from kanapka.forms import CustomUserCreationForm
 from kanapka.models import Place
+
+
+class SignUpView(CreateView):
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('index')
+    template_name = 'registration/signup.html'
+
+    def form_valid(self, form):
+        valid = super(SignUpView, self).form_valid(form)
+        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password1')
+        new_user = form.save()
+        print(new_user)
+        login(self.request, new_user)
+        return valid
+
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            print(user)
+            login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
 
 
 def add_new_place(request):

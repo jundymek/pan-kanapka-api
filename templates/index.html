@@ -56,7 +56,14 @@
     {% endfor %}
     </tbody>
 </table>
-<div id="serverResponse"></div>
+{% if user.is_authenticated %}
+    <p>You are logged as {{ user.username }}</p>
+    <p><a href="{% url 'logout' %}">logout</a></p>
+{% else %}
+    <p>Please log in or register</p>
+    <a href="{% url 'login' %}">login</a>
+    <a href="{% url 'signup' %}">register</a>
+{% endif %}
 
 <script>
     let places = {{places|safe}};

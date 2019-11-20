@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 
 
@@ -7,3 +8,16 @@ class Place(models.Model):
     address = models.CharField(max_length=200)
     latitude = models.FloatField()
     longitude = models.FloatField()
+
+
+class MyUser(AbstractUser):
+    username = models.CharField(max_length=40, unique=True)
+    places = models.ManyToManyField(Place)
+    USERNAME_FIELD = 'username'
+
+    def __str__(self):
+        return self.username
+
+# class Client(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     places = models.ManyToManyField(Place)
