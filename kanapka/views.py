@@ -7,7 +7,7 @@ from rest_framework import viewsets
 
 from kanapka.forms import CustomUserCreationForm
 from kanapka.models import Place, MyUser
-from kanapka.serializers import PlaceSerializer
+from kanapka.serializers import PlaceSerializer, UserSerializer
 
 
 class SignUpView(CreateView):
@@ -28,6 +28,7 @@ def subscribe(request, placeId):
     user = MyUser.objects.get(id=request.user.id)
     user.places.add(Place.objects.get(id=placeId))
     return HttpResponseRedirect('/')
+
 
 def add_new_place(request):
     try:
@@ -73,3 +74,8 @@ class PlaceDeleteView(DeleteView):
 class PlaceApiView(viewsets.ModelViewSet):
     serializer_class = PlaceSerializer
     queryset = Place.objects.all()
+
+
+class UserApiView(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = MyUser.objects.all()

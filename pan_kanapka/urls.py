@@ -22,6 +22,7 @@ from kanapka.views import IndexView, PlaceDeleteView, SignUpView
 
 router = routers.DefaultRouter()
 router.register('places', views.PlaceApiView, base_name='places')
+router.register('users', views.UserApiView, base_name='users')
 
 
 urlpatterns = [
