@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sass_processor',
     'kanapka',
-    'django_extensions'
+    'django_extensions',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

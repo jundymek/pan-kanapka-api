@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
 
 from kanapka import views
 from kanapka.views import IndexView, PlaceDeleteView, SignUpView
+
+router = routers.DefaultRouter()
+router.register('places', views.PlaceApiView, base_name='places')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +31,7 @@ urlpatterns = [
     path('delete/<int:pk>/', PlaceDeleteView.as_view(), name='delete'),
     path('subscribe/<int:placeId>/', views.subscribe, name='subscribe'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signup', SignUpView.as_view(), name="signup")
+    path('accounts/signup', SignUpView.as_view(), name="signup"),
+    path('api/', include(router.urls)),
+
 ]
