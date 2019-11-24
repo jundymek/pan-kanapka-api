@@ -21,7 +21,7 @@ from kanapka import views
 from kanapka.views import IndexView, PlaceDeleteView, SignUpView
 
 router = routers.DefaultRouter()
-router.register('places', views.PlaceApiView, base_name='places')
+router.register('places', views.PlaceListApiView, base_name='places')
 router.register('users', views.UserApiView, base_name='users')
 
 
@@ -34,5 +34,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup', SignUpView.as_view(), name="signup"),
     path('api/', include(router.urls)),
-
+    path('api/<int:pk>/', views.PlaceDetailApiView.as_view()),
 ]

@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 
 from kanapka.forms import CustomUserCreationForm
 from kanapka.models import Place, MyUser
@@ -71,7 +71,12 @@ class PlaceDeleteView(DeleteView):
 
 
 # ------------------API Endpoints-------------------
-class PlaceApiView(viewsets.ModelViewSet):
+class PlaceListApiView(viewsets.ModelViewSet):
+    serializer_class = PlaceSerializer
+    queryset = Place.objects.all()
+
+
+class PlaceDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PlaceSerializer
     queryset = Place.objects.all()
 
