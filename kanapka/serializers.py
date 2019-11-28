@@ -9,6 +9,12 @@ class PlaceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UnauthenticadedPlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = ('id', 'name', 'address')
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser

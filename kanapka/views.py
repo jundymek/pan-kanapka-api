@@ -7,7 +7,7 @@ from rest_framework import viewsets, generics
 
 from kanapka.forms import CustomUserCreationForm
 from kanapka.models import Place, MyUser
-from kanapka.serializers import PlaceSerializer, UserSerializer
+from kanapka.serializers import PlaceSerializer, UserSerializer, UnauthenticadedPlaceSerializer
 
 
 class SignUpView(CreateView):
@@ -72,8 +72,16 @@ class PlaceDeleteView(DeleteView):
 
 # ------------------API Endpoints-------------------
 class PlaceListApiView(viewsets.ModelViewSet):
-    serializer_class = PlaceSerializer
+    # serializer_class = PlaceSerializer
     queryset = Place.objects.all()
+
+    def get_serializer(self, *args, **kwargs):
+        if self.request.user and self.request.user.is_authenticated:
+            serializer_class = PlaceSerializer
+        else:
+            serializer_class = PlaceSerializer
+            # serializer_class = UnauthenticadedPlaceSerializer
+        return serializer_class(*args, **kwargs)
 
 
 class PlaceDetailApiView(generics.RetrieveUpdateDestroyAPIView):

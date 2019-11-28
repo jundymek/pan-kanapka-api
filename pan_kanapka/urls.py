@@ -24,7 +24,6 @@ router = routers.DefaultRouter()
 router.register('places', views.PlaceListApiView, base_name='places')
 router.register('users', views.UserApiView, base_name='users')
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
@@ -35,4 +34,6 @@ urlpatterns = [
     path('accounts/signup', SignUpView.as_view(), name="signup"),
     path('api/', include(router.urls)),
     path('api/<int:pk>/', views.PlaceDetailApiView.as_view()),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls'))
 ]
