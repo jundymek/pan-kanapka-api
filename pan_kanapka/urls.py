@@ -34,6 +34,7 @@ urlpatterns = [
     path('accounts/signup', SignUpView.as_view(), name="signup"),
     path('api/', include(router.urls)),
     path('api/<int:pk>/', views.PlaceDetailApiView.as_view()),
+    path('api/user/<int:pk>/', views.UserDetailApiView.as_view()),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls'))
 ]

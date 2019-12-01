@@ -3,11 +3,13 @@ from django.contrib.auth import login
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import authentication_classes, api_view
 
 from kanapka.forms import CustomUserCreationForm
 from kanapka.models import Place, MyUser
-from kanapka.serializers import PlaceSerializer, UserSerializer, UnauthenticadedPlaceSerializer
+from kanapka.serializers import PlaceSerializer, UserSerializer, UserDetailSerializer
 
 
 class SignUpView(CreateView):
@@ -23,11 +25,19 @@ class SignUpView(CreateView):
         return valid
 
 
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
 def subscribe(request, placeId):
     print(placeId)
-    user = MyUser.objects.get(id=request.user.id)
-    user.places.add(Place.objects.get(id=placeId))
-    return HttpResponseRedirect('/')
+    print(request.user)
+    if request.user.is_authenticated:
+        print('UDAŁO SIe')
+        user = MyUser.objects.get(id=request.user.id)
+        user.places.add(Place.objects.get(id=placeId))
+        return HttpResponseRedirect('/')
+    else:
+        print('User not logged')
+        return HttpResponseRedirect('/')
 
 
 def add_new_place(request):
@@ -74,11 +84,14 @@ class PlaceDeleteView(DeleteView):
 class PlaceListApiView(viewsets.ModelViewSet):
     # serializer_class = PlaceSerializer
     queryset = Place.objects.all()
+    authentication_classes = (TokenAuthentication,)
 
     def get_serializer(self, *args, **kwargs):
         if self.request.user and self.request.user.is_authenticated:
             serializer_class = PlaceSerializer
+            print(self.request.user)
         else:
+            print(self.request.user)
             serializer_class = PlaceSerializer
             # serializer_class = UnauthenticadedPlaceSerializer
         return serializer_class(*args, **kwargs)
@@ -92,3 +105,28 @@ class PlaceDetailApiView(generics.RetrieveUpdateDestroyAPIView):
 class UserApiView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = MyUser.objects.all()
+
+
+class UserDetailApiView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserDetailSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        print(self.request.user)
+        return MyUser.objects.filter(username=self.request.user)
+
+# class UserDetailApiView(APIView):
+#     # serializer_class = UserDetailSerializer
+#     # queryset = MyUser.objects.all()
+#     permission_classes = (permissions.IsAuthenticated,)
+#
+#     def get(self, request):
+#         serializer = UserSerializer(request.user)
+#         return Response(serializer.data)
+#
+#     def put(self, request):
+#         serializer = UserSerializer(request.user, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
