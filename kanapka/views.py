@@ -3,6 +3,8 @@ from django.contrib.auth import login
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView
+from push_notifications.api.rest_framework import GCMDeviceViewSet, GCMDeviceSerializer
+from push_notifications.models import GCMDevice
 from rest_framework import viewsets, generics, permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import authentication_classes, api_view
@@ -27,13 +29,29 @@ class SignUpView(CreateView):
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
-def subscribe(request, placeId):
-    print(placeId)
+def subscribe_api(request):
+    print(request.user)
+    if request.user.is_authenticated:
+        fcm_device = GCMDevice.objects.create(registration_id="eiGO0YLDDmk:APA91bHtZZPNI8jxcyP2M4utAUplQ3hmpJZkvk…Wjfm2_TKmBsp13Hxg92C-oAL9sFzbcM8ujfz2sCEAYRdoJxkT",
+                                              cloud_message_type="FCM", user=request.user)
+        print(GCMDevice.objects.all().values)
+        print(fcm_device)
+        fcm_device.send_message("This is a message")
+        return HttpResponseRedirect('/')
+    else:
+        print('User not logged')
+        return HttpResponseRedirect('/')
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+def subscribe(request, place_id):
+    print(place_id)
     print(request.user)
     if request.user.is_authenticated:
         print('UDAŁO SIe')
         user = MyUser.objects.get(id=request.user.id)
-        user.places.add(Place.objects.get(id=placeId))
+        user.places.add(Place.objects.get(id=place_id))
         return HttpResponseRedirect('/')
     else:
         print('User not logged')
@@ -114,19 +132,3 @@ class UserDetailApiView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         print(self.request.user)
         return MyUser.objects.filter(username=self.request.user)
-
-# class UserDetailApiView(APIView):
-#     # serializer_class = UserDetailSerializer
-#     # queryset = MyUser.objects.all()
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get(self, request):
-#         serializer = UserSerializer(request.user)
-#         return Response(serializer.data)
-#
-#     def put(self, request):
-#         serializer = UserSerializer(request.user, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

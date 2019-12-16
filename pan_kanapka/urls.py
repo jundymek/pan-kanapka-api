@@ -19,10 +19,13 @@ from rest_framework import routers
 
 from kanapka import views
 from kanapka.views import IndexView, PlaceDeleteView, SignUpView
+from push_notifications.api.rest_framework import APNSDeviceAuthorizedViewSet, GCMDeviceAuthorizedViewSet
 
 router = routers.DefaultRouter()
 router.register('places', views.PlaceListApiView, base_name='places')
 router.register('users', views.UserApiView, base_name='users')
+router.register('device/apns', APNSDeviceAuthorizedViewSet)
+router.register('device/gcm', GCMDeviceAuthorizedViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +33,7 @@ urlpatterns = [
     path('add/', views.add_new_place, name='add'),
     path('delete/<int:pk>/', PlaceDeleteView.as_view(), name='delete'),
     path('subscribe/<int:placeId>/', views.subscribe, name='subscribe'),
+    path('subscribe_api/', views.subscribe_api, name="subscribe_api"),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup', SignUpView.as_view(), name="signup"),
     path('api/', include(router.urls)),

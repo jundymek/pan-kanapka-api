@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'rest_auth'
+    'rest_auth',
+    'push_notifications'
 ]
 
 SITE_ID = 1
