@@ -3,13 +3,13 @@ from django.contrib.auth import login
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView
-from push_notifications.api.rest_framework import GCMDeviceViewSet, GCMDeviceSerializer
-from push_notifications.models import GCMDevice
+from push_notifications.models import GCMDevice, WebPushDevice
 from rest_framework import viewsets, generics, permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import authentication_classes, api_view
 
 from kanapka.forms import CustomUserCreationForm
+from kanapka.helpers import location_add_remove_from_subscription
 from kanapka.models import Place, MyUser
 from kanapka.serializers import PlaceSerializer, UserSerializer, UserDetailSerializer
 
@@ -32,8 +32,9 @@ class SignUpView(CreateView):
 def subscribe_api(request):
     print(request.user)
     if request.user.is_authenticated:
-        fcm_device = GCMDevice.objects.create(registration_id="eiGO0YLDDmk:APA91bHtZZPNI8jxcyP2M4utAUplQ3hmpJZkvk…Wjfm2_TKmBsp13Hxg92C-oAL9sFzbcM8ujfz2sCEAYRdoJxkT",
-                                              cloud_message_type="FCM", user=request.user)
+        fcm_device = GCMDevice.objects.create(
+            registration_id="eiGO0YLDDmk:APA91bHtZZPNI8jxcyP2M4utAUplQ3hmpJZkvk…Wjfm2_TKmBsp13Hxg92C-oAL9sFzbcM8ujfz2sCEAYRdoJxkT",
+            cloud_message_type="FCM", user=request.user)
         print(GCMDevice.objects.all().values)
         print(fcm_device)
         fcm_device.send_message("This is a message")
@@ -43,7 +44,7 @@ def subscribe_api(request):
         return HttpResponseRedirect('/')
 
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 @authentication_classes((TokenAuthentication,))
 def subscribe(request, place_id):
     print(place_id)
@@ -51,8 +52,9 @@ def subscribe(request, place_id):
     if request.user.is_authenticated:
         print('UDAŁO SIe')
         user = MyUser.objects.get(id=request.user.id)
-        user.places.add(Place.objects.get(id=place_id))
-        return HttpResponseRedirect('/')
+        location_add_remove_from_subscription(place_id, user)
+        from rest_framework.response import Response
+        return Response({"message": "Success"})
     else:
         print('User not logged')
         return HttpResponseRedirect('/')
@@ -132,3 +134,22 @@ class UserDetailApiView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         print(self.request.user)
         return MyUser.objects.filter(username=self.request.user)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+def subscribe_for_push(request):
+    print(request.data)
+    new_device = WebPushDevice(name=request.data['name'], active=True, registration_id=request.data['registration_id'],
+                              browser=request.data['browser'], p256dh=request.data['p256dh'], auth=request.data['auth'], user=request.user)
+    # if not WebPushDevice.objects.filter(registration_id=request.data['registration_id']).count():
+    #     print('NIE ISTNIEJE')
+    #     new_device.save()
+    if not WebPushDevice.objects.filter(user=request.user, registration_id=request.data['registration_id']).count():
+        print('NIE ISTNIEJE')
+        new_device.save()
+    else:
+        print('ISTNIEJE')
+
+    return HttpResponseRedirect('/')
+
