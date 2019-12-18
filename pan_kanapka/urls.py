@@ -29,16 +29,15 @@ router.register('device/gcm', GCMDeviceAuthorizedViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', IndexView.as_view(), name='index'),
-    path('add/', views.add_new_place, name='add'),
+    # path('', IndexView.as_view(), name='index'),
+    # path('add/', views.add_new_place, name='add'),
     path('delete/<int:pk>/', PlaceDeleteView.as_view(), name='delete'),
     path('subscribe/<int:place_id>/', views.subscribe, name='subscribe'),
-    path('subscribe_api/', views.subscribe_api, name="subscribe_api"),
     path('subscribe_for_push/', views.subscribe_for_push, name="subscribe_for_push"),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup', SignUpView.as_view(), name="signup"),
     path('api/', include(router.urls)),
-    path('api/<int:pk>/', views.PlaceDetailApiView.as_view()),
+    path('api/place/<int:pk>/', views.PlaceDetailApiView.as_view()),
     path('api/user/<str:username>/', views.UserDetailApiView.as_view()),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls'))
