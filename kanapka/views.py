@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import login
-from django.http import HttpResponseRedirect
+from django.db.models import Count
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView
-from push_notifications.models import GCMDevice, WebPushDevice
+from push_notifications.models import WebPushDevice
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import authentication_classes, api_view
@@ -149,3 +150,8 @@ def subscribe_for_push(request):
         print(WebPushDevice.objects.filter(name=request.user, registration_id=request.data['registration_id']))
 
     return Response({"message": "Push notification subscribe"})
+
+
+@api_view(['GET'])
+def get_number_of_subscriptions_for_locations(request):
+    return Response(MyUser.get_number_of_subscriptions_for_locations())

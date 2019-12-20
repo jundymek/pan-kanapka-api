@@ -19,7 +19,7 @@ from push_notifications.api.rest_framework import APNSDeviceAuthorizedViewSet, G
 from rest_framework import routers
 
 from kanapka import views
-from kanapka.views import IndexView, PlaceDeleteView, SignUpView
+from kanapka.views import PlaceDeleteView, SignUpView
 
 router = routers.DefaultRouter()
 router.register('places', views.PlaceListApiView, base_name='places')
@@ -39,6 +39,8 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/place/<int:pk>/', views.PlaceDetailApiView.as_view()),
     path('api/user/<str:username>/', views.UserDetailApiView.as_view()),
+    path('api/get_number_of_subscriptions/', views.get_number_of_subscriptions_for_locations,
+         name="get_number_of_subscriptions"),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls'))
 ]
