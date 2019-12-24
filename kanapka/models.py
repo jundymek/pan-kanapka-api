@@ -22,7 +22,7 @@ class MyUser(AbstractUser):
 
     @classmethod
     def get_number_of_subscriptions_for_locations(cls):
-        temp =  cls.objects.all().values('places').exclude(places__isnull=True).annotate(
+        temp = cls.objects.all().values('places').exclude(places__isnull=True).annotate(
             total=Count('places')).order_by('total')
         number_of_subscriptions = {}
         for i in temp:

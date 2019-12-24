@@ -1,17 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth import login
-from django.db.models import Count
-from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView
 from push_notifications.models import WebPushDevice
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import authentication_classes, api_view
+from rest_framework.decorators import authentication_classes, api_view, permission_classes
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from kanapka.forms import CustomUserCreationForm
-from kanapka.helpers import location_add_remove_from_subscription
+from kanapka.helpers import location_add_remove_from_subscription, is_webpushdevice_subscribed_by_user, \
+    is_location_subscribed_by_user
 from kanapka.models import Place, MyUser
 from kanapka.serializers import PlaceSerializer, UserSerializer, UserDetailSerializer
 
@@ -35,27 +35,11 @@ def subscribe(request, place_id):
     if request.user.is_authenticated:
         user = MyUser.objects.get(id=request.user.id)
         location_add_remove_from_subscription(place_id, user)
+        print(MyUser.get_number_of_subscriptions_for_locations())
         return Response({"message": "Success"})
     else:
         print('User not logged')
         return Response({"message": "User is not logged"})
-
-
-# @api_view(['POST'])
-# @permission_classes((IsAdminUser,))
-# @permission_classes([IsAuthenticated])
-# def add_new_place(request):
-#     try:
-#         if request.method == "POST":
-#             name = request.POST['name']
-#             address = request.POST['address']
-#             latitude = request.POST['latitude']
-#             longitude = request.POST['longitude']
-#             new_place = Place(name=name, address=address, latitude=latitude, longitude=longitude)
-#             new_place.save()
-#             return Response({"message": "New location was added"})
-#     except:
-#         return Response({"message": "Something went wrong"})
 
 
 class IndexView(ListView):
@@ -155,3 +139,21 @@ def subscribe_for_push(request):
 @api_view(['GET'])
 def get_number_of_subscriptions_for_locations(request):
     return Response(MyUser.get_number_of_subscriptions_for_locations())
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((SuperUserPermission,))
+def send_notification_message(request, location_id):
+    location = get_object_or_404(Place, id=location_id)
+    users = MyUser.objects.all()
+    counter = 0
+    for user in users:
+        if is_webpushdevice_subscribed_by_user(user.username) and is_location_subscribed_by_user(location_id,
+                                                                                                 user):
+            to_send = WebPushDevice.objects.get(name=user.username)
+            to_send.send_message(f"Za 5 min będę: {location.address} : {location.name}")
+            counter += 1
+    if counter > 0:
+        return Response({"message": f"Message was sent to {counter} users"})
+    return Response({"message": "Location is not subscribed by users"})
