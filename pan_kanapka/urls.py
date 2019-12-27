@@ -41,7 +41,7 @@ urlpatterns = [
     path('api/user/<str:username>/', views.UserDetailApiView.as_view()),
     path('api/get_number_of_subscriptions/', views.get_number_of_subscriptions_for_locations,
          name="get_number_of_subscriptions"),
-    path('api/send_notifications/<int:location_id>', views.send_notification_message, name="send_notifications"),
+    path('api/send_notification/<int:location_id>', views.send_notification_message, name="send_notification"),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls'))
 ]
