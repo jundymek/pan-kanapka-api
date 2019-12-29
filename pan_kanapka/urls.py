@@ -22,8 +22,8 @@ from kanapka import views
 from kanapka.views import PlaceDeleteView, SignUpView
 
 router = routers.DefaultRouter()
-router.register('places', views.PlaceListApiView, base_name='places')
-router.register('users', views.UserApiView, base_name='users')
+router.register('places', views.PlaceListApiView)
+router.register('users', views.UserApiView)
 router.register('device/apns', APNSDeviceAuthorizedViewSet)
 router.register('device/gcm', GCMDeviceAuthorizedViewSet)
 

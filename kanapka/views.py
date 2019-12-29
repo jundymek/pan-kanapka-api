@@ -155,5 +155,7 @@ def send_notification_message(request, location_id):
             to_send.send_message(f"Za 5 min będę: {location.address} : {location.name}")
             counter += 1
     if counter > 0:
+        print(counter)
         return Response({"message": f"Message was sent to {counter} users"})
+    print(counter)
     return Response({"message": "Location is not subscribed by users"})
