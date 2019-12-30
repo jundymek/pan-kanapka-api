@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-from dotenv import load_dotenv
 import dj_database_url
 import django_heroku
+from dotenv import load_dotenv
 
 load_dotenv()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'rest_auth',
-    'push_notifications'
+    'push_notifications',
+    'whitenoise.runserver_nostatic'
 ]
 
 SITE_ID = 1
@@ -65,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'pan_kanapka.urls'
@@ -102,7 +104,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -177,6 +178,8 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     "WP_PRIVATE_KEY": os.getenv('WP_PRIVATE_KEY'),
     "WP_CLAIMS": {'sub': "mailto: admin@admin.com"}
 }
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
