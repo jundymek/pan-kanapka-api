@@ -26,6 +26,7 @@ Poniżej przedstawiam technologie i narzędzia użyte do napisania opisywanej ap
 * Python
 * Django
 * Django-rest-framework
+* PostgreSQL
 
 ## Frontend
 
