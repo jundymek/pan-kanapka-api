@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from kanapka.models import Place, MyUser
+from kanapka.models import Place, MyUser, MenuItem
 
 
 class PlaceSerializer(serializers.ModelSerializer):
@@ -25,3 +25,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ('id', 'username', 'places')
+
+
+class MenuItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MenuItem
+        fields = '__all__'

@@ -14,34 +14,34 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include
 from push_notifications.api.rest_framework import APNSDeviceAuthorizedViewSet, GCMDeviceAuthorizedViewSet
 from rest_framework import routers
 
 from kanapka import views
-from kanapka.views import PlaceDeleteView, SignUpView
+from pan_kanapka import settings
 
 router = routers.DefaultRouter()
 router.register('places', views.PlaceListApiView)
+router.register('menu_items', views.MenuItemsApiView)
 router.register('users', views.UserApiView)
 router.register('device/apns', APNSDeviceAuthorizedViewSet)
 router.register('device/gcm', GCMDeviceAuthorizedViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', IndexView.as_view(), name='index'),
-    # path('add/', views.add_new_place, name='add'),
-    path('delete/<int:pk>/', PlaceDeleteView.as_view(), name='delete'),
     path('subscribe/<int:place_id>/', views.subscribe, name='subscribe'),
     path('subscribe_for_push/', views.subscribe_for_push, name="subscribe_for_push"),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signup', SignUpView.as_view(), name="signup"),
     path('api/', include(router.urls)),
-    path('api/place/<int:pk>/', views.PlaceDetailApiView.as_view()),
     path('api/user/<str:username>/', views.UserDetailApiView.as_view()),
     path('api/get_number_of_subscriptions/', views.get_number_of_subscriptions_for_locations,
          name="get_number_of_subscriptions"),
     path('api/send_notification/<int:location_id>', views.send_notification_message, name="send_notification"),
     path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls'))
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
