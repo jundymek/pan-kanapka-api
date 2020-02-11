@@ -108,8 +108,8 @@ def send_notification_message(request, location_id):
 
 class MenuItemsApiView(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (SuperUserPermission,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (SuperUserPermission,)
     serializer_class = MenuItemSerializer
 
     def create(self, request, *args, **kwargs):

@@ -15,5 +15,11 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - pan_kanapka@localhost" uuid="70517314-93c6-4284-af71-f93f4447f5bb">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/pan_kanapka</jdbc-url>
+    </data-source>
   </component>
 </project>
