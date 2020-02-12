@@ -13,9 +13,7 @@ from kanapka.serializers import PlaceSerializer, UserSerializer, UserDetailSeria
 
 class SuperUserPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        print(request.user)
-        if request.method == 'POST' or request.method == 'DELETE':
-            print(request.user)
+        if request.method == 'POST' or request.method == 'DELETE' or request.method == 'PATCH':
             return bool(request.user.is_superuser)
         return True
 
@@ -108,8 +106,8 @@ def send_notification_message(request, location_id):
 
 class MenuItemsApiView(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (SuperUserPermission,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (SuperUserPermission,)
     serializer_class = MenuItemSerializer
 
     def create(self, request, *args, **kwargs):

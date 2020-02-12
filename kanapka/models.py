@@ -32,6 +32,6 @@ class MyUser(AbstractUser):
 
 class MenuItem(models.Model):
     name = models.CharField(max_length=200)
-    image = models.ImageField()
+    image = models.ImageField(blank=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
