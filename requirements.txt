@@ -23,7 +23,7 @@ hyper==0.7.0
 hyperframe==3.2.0
 idna==2.8
 oauthlib==3.1.0
-Pillow==7.0.0
+Pillow==9.0.1
 psycopg2==2.8.4
 py-vapid==1.7.0
 pycparser==2.19
